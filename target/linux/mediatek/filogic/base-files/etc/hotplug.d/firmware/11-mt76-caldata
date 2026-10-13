@@ -17,6 +17,10 @@ case "$FIRMWARE" in
 	tplink,f65-v1)
 		ln -sf /tmp/factory/radio /lib/firmware/$FIRMWARE
 		;;
+	tplink,x50poev2)
+		ln -sf /tmp/ubi_factory_data/MT7981_EEPROM.bin \
+			/lib/firmware/$FIRMWARE
+		;;
 	tplink,fr365-v1)
 		ln -sf /tmp/wlan/radio /lib/firmware/$FIRMWARE
 		;;

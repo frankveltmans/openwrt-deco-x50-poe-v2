@@ -263,6 +263,15 @@ define Trusted-Firmware-A/mt7981-spim-nand-ubi-ddr3-1866
   USE_UBI:=1
 endef
 
+define Trusted-Firmware-A/mt7981-spim-nand-ubi-ddr3
+  NAME:=MediaTek MT7981 (SPI-NAND via SPIM, DDR3)
+  BOOT_DEVICE:=spim-nand
+  BUILD_SUBTARGET:=filogic
+  PLAT:=mt7981
+  DDR_TYPE:=ddr3
+  USE_UBI:=1
+endef
+
 define Trusted-Firmware-A/mt7981-spim-nand-ubi-ddr4
   NAME:=MediaTek MT7981 (SPI-NAND via SPIM, DDR4)
   BOOT_DEVICE:=spim-nand
@@ -696,6 +705,7 @@ TFA_TARGETS:= \
 	mt7981-snand-ddr3 \
 	mt7981-spim-nand-ddr3 \
 	mt7981-spim-nand-ddr3-1866 \
+	mt7981-spim-nand-ubi-ddr3 \
 	mt7981-spim-nand-ubi-ddr3-1866 \
 	mt7981-spim-nand-ubi-ddr4 \
 	mt7981-ram-ddr4 \

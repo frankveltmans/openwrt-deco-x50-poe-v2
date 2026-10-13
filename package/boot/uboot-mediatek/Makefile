@@ -651,6 +651,18 @@ define U-Boot/mt7981_routerich_ax3000
   DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr3
 endef
 
+define U-Boot/mt7981_tp-link_x50poev2
+  NAME:=MT7981 Reference Board
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=tplink_x50poev2
+  UBOOT_CONFIG:=mt7981_tp-link_x50poev2
+  UBOOT_IMAGE:=u-boot.bin
+  BL2_BOOTDEV:=spim-nand-ubi
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr3
+  DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ubi-ddr3
+endef
+
 define U-Boot/mt7981_qihoo_360t7
   NAME:=Qihoo 360T7
   BUILD_SUBTARGET:=filogic
@@ -1261,6 +1273,7 @@ UBOOT_TARGETS := \
 	mt7981_rfb-sd \
 	mt7981_rfb-snfi \
 	mt7981_routerich_ax3000 \
+  mt7981_tp-link_x50poev2 \
 	mt7981_qihoo_360t7 \
 	mt7981_qihoo_360t7-ubi \
 	mt7981_snr_snr-cpe-ax2 \
@@ -1328,6 +1341,21 @@ define Build/fip-image
 		$(PKG_BUILD_DIR)/u-boot.fip
 endef
 
+define Build/arm-tplink-seconduboot
+	$(STAGING_DIR_HOST)/bin/mkimage \
+	-A arm \
+	-O linux \
+	-T standalone \
+	-C none \
+	-a 0x0 \
+	-e 0x41e00000 \
+	-n 'U-Boot uImage' \
+	-d $(PKG_BUILD_DIR)/u-boot.bin \
+	$(PKG_BUILD_DIR)/seconduboot.bin
+	
+	$(CP) $(PKG_BUILD_DIR)/seconduboot.bin $(PKG_BUILD_DIR)/u-boot.bin
+endef
+
 ifdef CONFIG_TARGET_ramips_mt7621
 define Build/Prepare
 	$(call Build/Prepare/Default)
@@ -1348,6 +1376,9 @@ define Build/Compile
 	$(call Build/Compile/U-Boot)
 ifeq ($(UBOOT_IMAGE),u-boot.fip)
 	$(call Build/fip-image)
+endif
+ifeq ($(UBOOT_CONFIG),mt7981_tp-link_x50poev2)
+	$(call Build/arm-tplink-seconduboot)
 endif
 endef
 

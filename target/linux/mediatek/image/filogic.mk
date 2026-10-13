@@ -25,6 +25,10 @@ define Build/mt7981-bl31-uboot
 	cat $(STAGING_DIR_IMAGE)/mt7981_$1-u-boot.fip >> $@
 endef
 
+define Build/mt7981-bl31-seconduboot
+	cat $(STAGING_DIR_IMAGE)/mt7981_$1-u-boot.bin >> $@
+endef
+
 define Build/mt7986-bl2
 	cat $(STAGING_DIR_IMAGE)/mt7986-$1-bl2.img >> $@
 endef
@@ -3082,6 +3086,30 @@ define Device/tplink_fr365-v1
   DEVICE_PACKAGES := fitblk kmod-sfp kmod-usb3 kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 endef
 TARGET_DEVICES += tplink_fr365-v1
+
+define Device/tplink_x50poev2
+  DEVICE_VENDOR := TP-Link
+  DEVICE_MODEL := Deco X50 POE
+  DEVICE_VARIANT := v2
+  DEVICE_DTS := mt7981b-tplink-x50poev2
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := fitblk kmod-mt7915e kmod-mt7981-firmware kmod-usb3 e2fsprogs f2fsck mkf2fs mt7981-wo-firmware
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 32768k
+  KERNEL_IN_UBI := 1
+  KERNEL_INITRAMFS_SUFFIX := .itb
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	  fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGES += factory.ubi
+  IMAGE/factory.ubi := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  ARTIFACTS := seconduboot.bin
+  ARTIFACT/seconduboot.bin := mt7981-bl31-seconduboot tp-link_x50poev2
+  UBINIZE_PARTS := uboot=:$(STAGING_DIR_IMAGE)/mt7981_tp-link_x50poev2-u-boot.bin
+endef
+TARGET_DEVICES += tplink_x50poev2
 
 define Device/tplink_tl-xdr-common
   DEVICE_VENDOR := TP-Link
