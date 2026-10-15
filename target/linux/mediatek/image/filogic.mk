@@ -3094,7 +3094,7 @@ define Device/tplink_x50poev2
   DEVICE_VARIANT := v2
   DEVICE_DTS := mt7981b-tplink-x50poev2
   DEVICE_DTS_DIR := ../dts
-  DEVICE_PACKAGES := fitblk kmod-mt7915e kmod-mt7981-firmware kmod-usb3 e2fsprogs f2fsck mkf2fs mt7981-wo-firmware
+  DEVICE_PACKAGES := fitblk kmod-mt7915e kmod-mt7981-firmware kmod-usb3 e2fsprogs f2fsck mkf2fs mt7981-wo-firmware nand-utils
   UBINIZE_OPTS := -E 5
   BLOCKSIZE := 128k
   PAGESIZE := 2048
