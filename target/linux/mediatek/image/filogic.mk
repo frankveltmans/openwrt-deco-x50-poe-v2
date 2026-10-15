@@ -1,6 +1,7 @@
 DTS_DIR := $(DTS_DIR)/mediatek
 DEVICE_VARS += SUPPORTED_TELTONIKA_DEVICES
 DEVICE_VARS += SUPPORTED_TELTONIKA_HW_MODS
+DEVICE_VARS += TPLINK_SUPPORT_STRING
 
 define Image/Prepare
 	# For UBI we want only one extra block
@@ -3102,9 +3103,10 @@ define Device/tplink_x50poev2
   KERNEL_INITRAMFS_SUFFIX := .itb
   KERNEL_INITRAMFS := kernel-bin | lzma | \
 	  fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
-  IMAGES += factory.ubi
-  IMAGE/factory.ubi := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE) | tplink-image-2022
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  TPLINK_SUPPORT_STRING := SupportList:\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:45550000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:55530000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:43410000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:42340000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:4A500000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:484B0000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:53470000}\r\n{product_name:X50-POE,product_ver:2.0.0,special_id:4B520000}
   ARTIFACTS := seconduboot.bin
   ARTIFACT/seconduboot.bin := mt7981-bl31-seconduboot tp-link_x50poev2
   UBINIZE_PARTS := uboot=:$(STAGING_DIR_IMAGE)/mt7981_tp-link_x50poev2-u-boot.bin
